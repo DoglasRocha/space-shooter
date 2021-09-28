@@ -5,7 +5,7 @@ const flyShip = event => {
 	switch (event.key) {
 		case 'ArrowUp':
 			event.preventDefault();
-			moveUp;
+			moveUp();
 			break;
 		case 'ArrowDown':
 			event.preventDefault();
@@ -26,3 +26,15 @@ const moveUp = () => {
 	position -= 50;
 	yourShip.style.top = `${position}px`;
 }
+
+// move down function
+const moveDown = () => {
+	let topPosition = getComputedStyle(yourShip).getPropertyValue('top');
+	if (topPosition === '550px') return;
+
+	let position = parseInt(topPosition);
+	position += 50;
+	yourShip.style.top = `${position}px`;
+}
+
+addEventListener('keydown', flyShip)
