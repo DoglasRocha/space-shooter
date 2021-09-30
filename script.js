@@ -37,4 +37,27 @@ const moveDown = () => {
 	yourShip.style.top = `${position}px`;
 }
 
+// shoot function
+const fireLaser = () => {
+	let laser = creaseLaserElement();
+	playArea.appendChild(laser);
+	moveLaser();
+}
+
+const createLaserElement = () => {
+	let xPosition = parseInt(getComputedStyle(yourShip).getPropertyValue('left'));
+	let yposition = parseInt(getComputedStyle(yourShip).getPropertyValue('top'));
+	let newLaser = document.createElement('img');
+	newLaser.src = 'img/shoot.png';
+	newLaser.classList.add('laser');
+	newLaser.style.left = `${xPosition}px`;
+	newLaser.style.top = `${yPosition - 10}px`;
+
+	return newLaser;
+}
+
+const moveLaser = () => {
+
+}
+
 addEventListener('keydown', flyShip)

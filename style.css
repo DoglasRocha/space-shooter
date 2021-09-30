@@ -24,3 +24,8 @@ body {
 	left: 20px;
 	top: 250px;
 }
+
+.laser {
+	 position: relative;
+	 height: 30px;
+}
