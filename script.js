@@ -21,9 +21,9 @@ function flyShip(event) {
 // move up function
 function moveUp() {
 	let topPosition = getComputedStyle(yourShip).getPropertyValue('top');
-	if (topPosition === '0px') return;
-
 	let position = parseInt(topPosition);
+	if (position <= 0) return;
+
 	position -= 50;
 	yourShip.style.top = `${position}px`;
 }
@@ -31,9 +31,9 @@ function moveUp() {
 // move down function
 function moveDown() {
 	let topPosition = getComputedStyle(yourShip).getPropertyValue('top');
-	if (topPosition === '550px') return;
-
 	let position = parseInt(topPosition);
+	if (position >= 550) return;
+
 	position += 50;
 	yourShip.style.top = `${position}px`;
 }
@@ -60,7 +60,16 @@ function createLaserElement() {
 function moveLaser(laser) {
 	let laserInterval = setInterval(() => {
 		let xPosition = parseInt(laser.style.left);
-		
+		let aliens = document.querySelectorAll('.aliens');
+
+		aliens.forEach((alien) => { // checking if the alien was shot. if true, change the image src
+			if (checkLaserCollision(laser, alien)) {
+				alien.src = 'img/explosion.png';
+				alien.classList.remove('alien');
+				alien.classList.add('dead-alien');
+			}
+		})
+
 		if (xPosition >= 340) {
 			laser.remove();
 		} else {
@@ -82,6 +91,40 @@ function createAliens() {
 	moveAlien(newAlien);
 }
 
+// function that moves the enemies
+function moveAlien(alien) {
+	let moveAlienInterval = setInterval(() => {
+		let xPosition = parseInt(getComputedStyle(alien).getPropertyValue('left'));
+		if (xPosition <= 50) {
+			if (Array.from(alien.classList).includes('dead-alien')) {
+				alien.remove();
+			} else {
+				// gameOver();
+			}
+		} else {
+			alien.style.left = `${xPosition - 4}px`;
+		}
+	}, 30);
+}
 
+// function to analyse collision
+function checkLaserCollision(laser, alien) {
+	let laserTop = parseInt(laser.style.top);
+	let laserLeft = parseInt(laser.style.left);
+	let laserBottom = laserTop - 20;
 
-addEventListener('keydown', flyShip)
+	let alienTop = parseInt(alien.style.top);
+	let alienLeft = parseInt(alien.style.left);
+	let alienBottom = alienTop - 30;
+
+	if (laserLeft <= 340 && laserLeft + 40 >= alienLeft) {
+		if (laserTop <= alienTop && laserTop >= alienBottom) {
+			return True
+		} 
+		return False;
+	}
+	return False;
+}
+
+addEventListener('keydown', flyShip);
+createAliens();
