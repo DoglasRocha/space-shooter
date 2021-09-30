@@ -1,7 +1,7 @@
 const yourShip = document.querySelector('.player-shooter');
-const playArea = document.querySelector('#main-play-game');
+const playArea = document.querySelector('#main-play-area');
 
-const flyShip = event => {
+function flyShip(event) {
 	switch (event.key) {
 		case 'ArrowUp':
 			event.preventDefault();
@@ -18,7 +18,7 @@ const flyShip = event => {
 }
 
 // move up function
-const moveUp = () => {
+function moveUp() {
 	let topPosition = getComputedStyle(yourShip).getPropertyValue('top');
 	if (topPosition === '0px') return;
 
@@ -28,7 +28,7 @@ const moveUp = () => {
 }
 
 // move down function
-const moveDown = () => {
+function moveDown() {
 	let topPosition = getComputedStyle(yourShip).getPropertyValue('top');
 	if (topPosition === '550px') return;
 
@@ -38,15 +38,15 @@ const moveDown = () => {
 }
 
 // shoot function
-const fireLaser = () => {
-	let laser = creaseLaserElement();
+function fireLaser() {
+	let laser = createLaserElement();
 	playArea.appendChild(laser);
-	moveLaser();
+	moveLaser(laser);
 }
 
-const createLaserElement = () => {
+function createLaserElement() {
 	let xPosition = parseInt(getComputedStyle(yourShip).getPropertyValue('left'));
-	let yposition = parseInt(getComputedStyle(yourShip).getPropertyValue('top'));
+	let yPosition = parseInt(getComputedStyle(yourShip).getPropertyValue('top'));
 	let newLaser = document.createElement('img');
 	newLaser.src = 'img/shoot.png';
 	newLaser.classList.add('laser');
@@ -56,8 +56,16 @@ const createLaserElement = () => {
 	return newLaser;
 }
 
-const moveLaser = () => {
-
+function moveLaser(laser) {
+	let laserInterval = setInterval(() => {
+		let xPosition = parseInt(laser.style.left);
+		
+		if (xPosition >= 340) {
+			laser.remove();
+		} else {
+			laser.style.left = `${xPosition + 8}px`;
+		}
+	}, 10);
 }
 
 addEventListener('keydown', flyShip)
