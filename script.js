@@ -3,6 +3,8 @@ const playArea = document.querySelector('#main-play-area');
 const alienImg = ['img/monster-1.png', 'img/monster-2.png', 'img/monster-3.png'];
 const instructionText = document.querySelector('.game-instructions');
 const startButton = document.querySelector('.start-button');
+const pointsElement = document.querySelector('.points');
+var points = 0;
 
 function flyShip(event) {
 	switch (event.key) {
@@ -26,7 +28,7 @@ function moveUp() {
 	let position = parseInt(topPosition);
 	if (position <= 0) return;
 
-	position -= 50;
+	position -= 30;
 	yourShip.style.top = `${position}px`;
 }
 
@@ -36,7 +38,7 @@ function moveDown() {
 	let position = parseInt(topPosition);
 	if (position >= 550) return;
 
-	position += 50;
+	position += 30;
 	yourShip.style.top = `${position}px`;
 }
 
@@ -63,14 +65,15 @@ function moveLaser(laser) {
 	let laserInterval = setInterval(() => {
 		let xPosition = parseInt(laser.style.left);
 		let aliens = document.querySelectorAll('.alien');
-		console.log(aliens)
 
 		aliens.forEach((alien) => { // checking if the alien was shot. if true, change the image src
-			console.log(checkLaserCollision(laser, alien))
 			if (checkLaserCollision(laser, alien)) {
 				alien.src = 'img/explosion.png';
 				alien.classList.remove('alien');
 				alien.classList.add('dead-alien');
+
+				points++;
+				pointsElement.innerHTML = `Pontos: ${points}`;
 			}
 		})
 
@@ -121,9 +124,6 @@ function checkLaserCollision(laser, alien) {
 	let alienLeft = parseInt(alien.style.left);
 	let alienBottom = alienTop - 30;
 
-	console.log(laserLeft !== 340 && laserLeft + 40 >= alienLeft);
-	console.log(laserTop <= alienTop && laserTop >= alienBottom);
-
 	if (laserLeft !== 340 && laserLeft + 40 >= alienLeft) {
 		if (laserTop <= alienTop && laserTop >= alienBottom) {
 			return true;
@@ -136,7 +136,11 @@ function checkLaserCollision(laser, alien) {
 function playGame() {
 	startButton.style.display = 'none';
 	instructionText.style.display = 'none';
+	pointsElement.style.display = 'flex';
+	pointsElement.innerHTML = `Pontos: ${points}`;
+
 	addEventListener('keydown', flyShip);
+
 	alienInterval = setInterval(() => {
 		createAliens();
 	}, 2000);
@@ -161,5 +165,7 @@ function gameOver() {
 		yourShip.style.top = '250px';
 		startButton.style.display = 'block';
 		instructionText.style.display = 'block';
+		pointsElement.style.display = 'none';
+		points = 0;
 	})
 }
